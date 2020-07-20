@@ -1,5 +1,5 @@
 # Python-2DGame
-I am creating a 2D Python game using pygame.
+I am creating a 2D Python game using pygame. I want to create a game that connects to a server (which I will be running on a Raspberry Pi) to play against other players.
 
 ## Installation
 
@@ -19,3 +19,5 @@ Simply run the Python file using:
 ```bash
 python3 main.py
 ```
+
+(this is outdated and I will need to update it soon)

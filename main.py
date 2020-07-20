@@ -2,6 +2,7 @@
 # Currently not sure what game I want to create, but it will be a 2D game
 
 import pygame
+from network import Network
 
 # Initialises pygame
 pygame.init()
@@ -45,27 +46,47 @@ class Player():
         if keys[pygame.K_DOWN] and self.y < windowSizeY - self.height:
            self.y += self.vel
 
+        self.update()
+
+    def update(self):
         self.rect = (self.x, self.y, self.width, self.height)
 
+def read_pos(str):
+    str = str.split(",")
+    return int(str[0]), int(str[1])
 
-def redrawWindow(window, player):
+def make_pos(tup):
+    return str(tup[0]) + "," + str(tup[1])
+
+def redrawWindow(window, player, player2):
     window.fill((255, 255, 255))
     player.draw(window)
+    player2.draw(window)
     pygame.display.update()
 
 def main():
-    p = Player(50, 50, 40, 60, (255, 0, 0))
+    n = Network()
+    startPos = read_pos(n.getPos())
+    
+    p = Player(startPos[0], startPos[1], 40, 60, (255, 0, 0))
+    p2 = Player(0, 0, 40, 60, (0, 0, 255))
     clock = pygame.time.Clock()
     
     running = True
     while running:
         clock.tick(60)
+
+        p2Pos = read_pos(n.send(make_pos((p.x, p.y))))
+        p2.x = p2Pos[0]
+        p2.y = p2Pos[1]
+        p2.update()
+        
         for event in pygame.event.get():
            if event.type == pygame.QUIT:
                running = False
                pygame.quit()
 
         p.move()
-        redrawWindow(window, p)
+        redrawWindow(window, p, p2)
 
 main()

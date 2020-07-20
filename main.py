@@ -20,35 +20,52 @@ pygame.display.set_icon(icon)
 # Set the background color
 window.fill((255, 255, 255))
 
-# Set up for the basic player size/speed/location
-x = 50
-y = 50
-width = 40
-height = 60
-vel = 1
 
-# Main Loop
-running = True
-while running:
+class Player():
+    def __init__(self, x, y, width, height, color):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.color = color
+        self.rect = (x, y, width, height)
+        self.vel = 3
 
-    for event in pygame.event.get():
-       if event.type == pygame.QUIT:
-           running = False
+    def draw(self, window):
+        pygame.draw.rect(window, self.color, self.rect)
 
-    # Movement
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and x > vel:
-       x -= vel
-    if keys[pygame.K_RIGHT] and x < windowSizeX - width:
-       x += vel
-    if keys[pygame.K_UP] and y > vel:
-       y -= vel
-    if keys[pygame.K_DOWN] and y < windowSizeY - height:
-       y += vel
-       
+    def move(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and self.x > self.vel:
+           self.x -= self.vel
+        if keys[pygame.K_RIGHT] and self.x < windowSizeX - self.width:
+           self.x += self.vel
+        if keys[pygame.K_UP] and self.y > self.vel:
+           self.y -= self.vel
+        if keys[pygame.K_DOWN] and self.y < windowSizeY - self.height:
+           self.y += self.vel
+
+        self.rect = (self.x, self.y, self.width, self.height)
+
+
+def redrawWindow(window, player):
     window.fill((255, 255, 255))
-    pygame.draw.rect(window, (255, 0, 0), (x, y, width, height))
-
+    player.draw(window)
     pygame.display.update()
 
-pygame.quit()
+def main():
+    p = Player(50, 50, 40, 60, (255, 0, 0))
+    clock = pygame.time.Clock()
+    
+    running = True
+    while running:
+        clock.tick(60)
+        for event in pygame.event.get():
+           if event.type == pygame.QUIT:
+               running = False
+               pygame.quit()
+
+        p.move()
+        redrawWindow(window, p)
+
+main()
